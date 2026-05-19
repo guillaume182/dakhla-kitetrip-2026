@@ -423,23 +423,120 @@
     .livewind-footer { font-size: 0.55rem; letter-spacing: 0.08em; }
   }
 
-  /* ===== WINDY FRAME ===== */
-  .windy-frame {
-    position: relative;
-    width: 100%;
-    height: 380px;
-    background: var(--foam);
+  /* ===== FORECAST GRID (Open-Meteo / GMMH) ===== */
+  .fc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--sand-deep);
+    border: 1px solid var(--sand-deep);
+    margin-bottom: 1rem;
   }
-  .windy-frame iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
+  .fc-day {
+    background: white;
+    padding: 1rem 0.9rem;
+    min-height: 200px;
+  }
+  .fc-day-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ocean-deep);
+    border-bottom: 1px solid var(--sand-deep);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
+  }
+  .fc-day-title small {
     display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--ocean);
+    margin-top: 0.2rem;
+    text-transform: uppercase;
   }
-  @media (max-width: 600px) {
-    .windy-frame { height: 360px; }
+  .fc-slot {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.07);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+  }
+  .fc-slot:last-child { border-bottom: none; }
+  .fc-slot-time {
+    color: var(--ocean);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .fc-slot-data {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .fc-temp {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .fc-wind-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+  }
+  .fc-chip {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    min-width: 22px;
+    text-align: center;
+  }
+  /* Échelle de couleur vent (style Windy) */
+  .wind-0 { background: #e3edd3; color: var(--ocean-deep); }
+  .wind-1 { background: #b8d97a; color: var(--ink); }
+  .wind-2 { background: #74c043; color: var(--ink); }
+  .wind-3 { background: #f3d645; color: var(--ink); }
+  .wind-4 { background: #f59e3b; color: var(--ink); }
+  .wind-5 { background: #ed6841; color: var(--foam); }
+  .wind-6 { background: var(--coral); color: var(--foam); }
+  .fc-arrow {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    color: var(--ocean-deep);
+    transition: transform 0.4s ease;
+  }
+  .fc-arrow svg { width: 100%; height: 100%; }
+  .fc-foot {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6b5c4a;
+    text-align: right;
+  }
+  .fc-loading, .fc-error {
+    grid-column: 1 / -1;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--ocean);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .fc-error { color: var(--coral); }
+
+  @media (max-width: 720px) {
+    .fc-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 440px) {
+    .fc-grid { grid-template-columns: 1fr; }
+    .fc-day { min-height: auto; }
   }
 
   /* ===== VIDEOS GRID ===== */
@@ -663,21 +760,19 @@
     </div>
   </section>
 
-  <!-- Widget Windy -->
+  <!-- Widget Prévisions Dakhla Aéroport (Open-Meteo) -->
   <section class="widget-section fade-in" style="margin-top: 3rem;">
-    <div class="widget-label">Prévisions station · Windy · Dakhla Aéroport (GMMH)</div>
+    <div class="widget-label">Prévisions station · Dakhla Aéroport (GMMH)</div>
     <div class="widget-card">
       <span class="corner-mark tl"></span>
       <span class="corner-mark tr"></span>
       <span class="corner-mark bl"></span>
       <span class="corner-mark br"></span>
 
-      <div class="windy-frame">
-        <iframe
-          src="https://embed.windy.com/embed.html?type=forecast&location=coordinates&detail=true&detailLat=23.687&detailLon=-15.859&metricTemp=%C2%B0C&metricRain=mm&metricWind=kt&embedMake=true"
-          loading="lazy"
-          title="Prévisions Windy · Dakhla Aéroport"></iframe>
+      <div class="fc-grid" id="fcGrid">
+        <div class="fc-loading">Chargement des prévisions…</div>
       </div>
+      <div class="fc-foot">Source · Open-Meteo · ECMWF · 23.687°N · −15.859°W</div>
     </div>
   </section>
 
@@ -705,13 +800,13 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <span>DATA · WINDGURU + WINDFINDER + WINDY</span>
+    <span>DATA · OPEN-METEO + WINDGURU + WINDFINDER</span>
     <span>
       <a href="https://www.windguru.cz/49315" target="_blank" rel="noopener">Windguru ↗</a>
       &nbsp;·&nbsp;
       <a href="https://www.windfinder.com/forecast/dakhla_attitude" target="_blank" rel="noopener">Windfinder ↗</a>
       &nbsp;·&nbsp;
-      <a href="https://www.windy.com/station/ad-GMMH?23.687,-15.859,11" target="_blank" rel="noopener">Windy ↗</a>
+      <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo ↗</a>
     </span>
   </footer>
 
@@ -770,6 +865,99 @@
 
     update();
     setInterval(update, 5 * 60 * 1000); // refresh toutes les 5 min
+  })();
+</script>
+
+<script>
+  // Widget prévisions Dakhla Aéroport (GMMH) via Open-Meteo
+  (function() {
+    const lat = 23.687;
+    const lon = -15.859;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kn&temperature_unit=celsius&timezone=auto&forecast_days=5`;
+
+    const grid = document.getElementById('fcGrid');
+    const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    const monthNames = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'août', 'sep', 'oct', 'nov', 'déc'];
+
+    // Échelle de couleur du vent (en knots) — calée sur les codes Windy
+    function windClass(speed) {
+      if (speed < 5)  return 'wind-0';
+      if (speed < 12) return 'wind-1';
+      if (speed < 18) return 'wind-2';
+      if (speed < 22) return 'wind-3';
+      if (speed < 27) return 'wind-4';
+      if (speed < 33) return 'wind-5';
+      return 'wind-6';
+    }
+
+    fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        const h = data.hourly;
+        const times = h.time;
+
+        // Heures clés à afficher par jour : 06, 09, 12, 15, 18
+        const slotHours = [6, 9, 12, 15, 18];
+        const daysMap = new Map();
+
+        for (let i = 0; i < times.length; i++) {
+          const t = new Date(times[i]);
+          const hour = t.getHours();
+          if (!slotHours.includes(hour)) continue;
+
+          const key = t.toISOString().slice(0, 10);
+          if (!daysMap.has(key)) {
+            daysMap.set(key, { date: t, slots: [] });
+          }
+          daysMap.get(key).slots.push({
+            time: t,
+            temp: h.temperature_2m[i],
+            wind: h.wind_speed_10m[i],
+            gust: h.wind_gusts_10m[i],
+            dir:  h.wind_direction_10m[i]
+          });
+        }
+
+        const days = Array.from(daysMap.values()).slice(0, 4);
+
+        if (!days.length) {
+          grid.innerHTML = '<div class="fc-error">Aucune donnée disponible.</div>';
+          return;
+        }
+
+        grid.innerHTML = days.map(day => {
+          const d = day.date;
+          const title = `${dayNames[d.getDay()]} ${d.getDate()}`;
+          const subtitle = monthNames[d.getMonth()];
+          return `
+            <div class="fc-day">
+              <div class="fc-day-title">${title}<small>${subtitle}</small></div>
+              ${day.slots.map(s => `
+                <div class="fc-slot">
+                  <span class="fc-slot-time">${String(s.time.getHours()).padStart(2,'0')}h</span>
+                  <div class="fc-slot-data">
+                    <span class="fc-temp">${Math.round(s.temp)}°C</span>
+                    <span class="fc-wind-line">
+                      <span class="fc-chip ${windClass(s.wind)}">${Math.round(s.wind)}</span>
+                      <span class="fc-chip ${windClass(s.gust)}">${Math.round(s.gust)}</span>
+                      <span>kt</span>
+                    </span>
+                  </div>
+                  <span class="fc-arrow" style="transform: rotate(${(Math.round(s.dir) + 180) % 360}deg);">
+                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10 3 L15 16 L10 13 L5 16 Z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }).join('');
+      })
+      .catch(err => {
+        grid.innerHTML = '<div class="fc-error">Prévisions momentanément indisponibles.</div>';
+        console.warn('Forecast error:', err);
+      });
   })();
 </script>
 
