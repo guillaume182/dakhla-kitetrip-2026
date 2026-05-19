@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dakhla Attitude — Prévisions Vent & Mer</title>
-<meta name="description" content="Prévisions vent, vagues et météo pour Dakhla Attitude sur 4 jours. Conditions kitesurf et windsurf en temps réel.">
+<title>Dakhla Kitetrip 2026 — Prévisions Vent & Mer</title>
+<meta name="description" content="Prévisions vent, vagues et météo pour le Kitetrip Dakhla 2026. Conditions kitesurf et windsurf en temps réel via Windfinder et Windguru.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -273,8 +273,8 @@
     </svg>
 
     <div class="kicker">— Maroc / Sahara Atlantique</div>
-    <h1>Dakhla<br>Attitude<em>.</em></h1>
-    <p class="lead">Prévisions vent, vagues et température sur 4 jours pour l'un des spots de kitesurf les plus iconiques de la planète.</p>
+    <h1>Dakhla<br>Kitetrip<em> 2026</em></h1>
+    <p class="lead">Prévisions vent, vagues et température sur 4 jours pour l'un des spots de kitesurf les plus iconiques de la planète. Deux sources croisées pour fiabiliser la lecture.</p>
   </header>
 
   <!-- Meta -->
@@ -297,7 +297,7 @@
     </div>
   </section>
 
-  <!-- Widget -->
+  <!-- Widgets -->
   <section class="widget-section fade-in">
     <div class="widget-label">Prévisions 4 jours · Windfinder</div>
     <div class="widget-card">
@@ -313,10 +313,42 @@
     </div>
   </section>
 
+  <!-- Widget Windguru -->
+  <section class="widget-section fade-in" style="margin-top: 3rem;">
+    <div class="widget-label">Prévisions 10 jours · Windguru</div>
+    <div class="widget-card">
+      <span class="corner-mark tl"></span>
+      <span class="corner-mark tr"></span>
+      <span class="corner-mark bl"></span>
+      <span class="corner-mark br"></span>
+
+      <script id="wg_fwdg_510441_100_1716100000000">
+      (function (window, document) {
+        var loader = function () {
+          var arg = ["s=510441","m=100","uid=wg_fwdg_510441_100_1716100000000","wj=knots","tj=c","waj=m","tij=cm","odh=0","doh=24","fhours=240","hrsm=2","vt=forecasts","lng=fr","idbs=1","p=WINDSPD,GUST,SMER,TMP,FLHGT,CDC,APCP1s,RATING"];
+          var script = document.createElement("script");
+          var tag = document.getElementsByTagName("script")[0];
+          script.src = "https://www.windguru.net/js/widget.php?"+(arg.join("&"));
+          script.charset = "UTF-8";
+          tag.parentNode.insertBefore(script, tag);
+        };
+        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+      })(window, document);
+      </script>
+      <noscript>
+        <a href="https://www.windguru.cz/510441" rel="nofollow">Prévisions Windguru pour Dakhla, Dakhla Attitude Hotel</a>
+      </noscript>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
-    <span>DATA · WINDFINDER.COM</span>
-    <span><a href="https://www.windfinder.com/forecast/dakhla_attitude" target="_blank" rel="noopener">Voir sur Windfinder ↗</a></span>
+    <span>DATA · WINDFINDER + WINDGURU</span>
+    <span>
+      <a href="https://www.windfinder.com/forecast/dakhla_attitude" target="_blank" rel="noopener">Windfinder ↗</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.windguru.cz/510441" target="_blank" rel="noopener">Windguru ↗</a>
+    </span>
   </footer>
 
 </div>
