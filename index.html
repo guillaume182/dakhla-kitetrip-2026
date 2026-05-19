@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dakhla Kitetrip 2026 — Prévisions Vent & Mer</title>
-<meta name="description" content="Prévisions vent, vagues et météo pour le Kitetrip Dakhla 2026. Conditions kitesurf et windsurf en temps réel via Windguru, Windfiner et Windy.">
+<meta name="description" content="Prévisions vent, vagues et météo pour le Kitetrip Dakhla 2026. Conditions kitesurf et windsurf en temps réel via Windfinder et Windguru.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -423,6 +423,188 @@
     .livewind-footer { font-size: 0.55rem; letter-spacing: 0.08em; }
   }
 
+  /* ===== ALBUM CARD ===== */
+  .album-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background: var(--ocean-deep);
+    color: var(--foam);
+    padding: 1.75rem 2rem;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--coral);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .album-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 12px 12px 0 var(--coral);
+  }
+  .album-card .album-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+  .album-card .album-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    opacity: 0.8;
+  }
+  .album-card .album-arrow {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+  }
+  .album-card:hover .album-arrow { transform: translate(4px, -4px); }
+
+  /* ===== CONVERTER ===== */
+  .converter {
+    padding: 1.75rem;
+  }
+  .conv-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .conv-field {
+    flex: 1 1 200px;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    border-bottom: 2px solid var(--sand-deep);
+    padding: 0.4rem 0;
+  }
+  .conv-field input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    width: 100%;
+    outline: none;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+  .conv-field input::-webkit-outer-spin-button,
+  .conv-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .conv-field input:focus { color: var(--coral); }
+  .conv-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    flex-shrink: 0;
+  }
+  .conv-arrow {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    color: var(--coral);
+    flex-shrink: 0;
+  }
+  .conv-foot {
+    margin-top: 1.25rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--sand-deep);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6b5c4a;
+  }
+  @media (max-width: 600px) {
+    .conv-row { flex-direction: column; align-items: stretch; }
+    .conv-arrow { text-align: center; transform: rotate(90deg); }
+    .conv-field input { font-size: 1.4rem; }
+  }
+
+  /* ===== GEAR TABLE ===== */
+  .gear-table-wrap {
+    overflow-x: auto;
+  }
+  .gear-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+  .gear-table thead th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    border-bottom: 2px solid var(--ocean-deep);
+    padding: 0.75rem 0.6rem;
+    font-weight: 500;
+    background: var(--foam);
+  }
+  .gear-table tbody td {
+    padding: 0.8rem 0.6rem;
+    border-bottom: 1px dashed var(--sand-deep);
+    font-family: 'Fraunces', serif;
+    color: var(--ink);
+    vertical-align: top;
+  }
+  .gear-table tbody tr:last-child td { border-bottom: none; }
+  .gear-table tbody tr:hover td { background: rgba(244, 185, 66, 0.08); }
+  .gear-table .rider-name {
+    font-weight: 600;
+    color: var(--ocean-deep);
+  }
+  .gear-table .placeholder { color: #b5a98c; font-style: italic; }
+
+  /* ===== TIDE FRAME ===== */
+  .tide-frame {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background: white;
+    overflow: hidden;
+  }
+  .tide-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .tide-help {
+    margin-top: 0.9rem;
+    padding: 0.75rem 1rem;
+    background: rgba(244, 185, 66, 0.15);
+    border-left: 3px solid var(--sun);
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .tide-help strong { font-weight: 600; }
+  .tide-help a { color: var(--coral); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  @media (max-width: 600px) {
+    .tide-frame { height: 520px; }
+  }
+
   /* ===== FORECAST GRID (Open-Meteo / GMMH) ===== */
   .fc-grid {
     display: grid;
@@ -646,7 +828,7 @@
 
     <div class="kicker">— Maroc / Sahara Atlantique</div>
     <h1>Dakhla<br>Kitetrip<em> 2026</em></h1>
-    <p class="lead">Conditions météo actuelles à Dakhla Lagoon, prévisions et tutos pour se chauffer avant le départ.</p>
+    <p class="lead">Conditions météo actuelles à Dakhla Lagoon, prévisions et vidéos tutos pour se chauffer.</p>
   </header>
 
   <!-- Meta -->
@@ -773,6 +955,108 @@
         <div class="fc-loading">Chargement des prévisions…</div>
       </div>
       <div class="fc-foot">Source · Open-Meteo · ECMWF · 23.687°N · −15.859°W</div>
+    </div>
+  </section>
+
+  <!-- Marées -->
+  <section class="widget-section fade-in" style="margin-top: 3rem;">
+    <div class="widget-label">Marées · Dakhla</div>
+    <div class="widget-card">
+      <span class="corner-mark tl"></span>
+      <span class="corner-mark tr"></span>
+      <span class="corner-mark bl"></span>
+      <span class="corner-mark br"></span>
+
+      <div class="tide-frame">
+        <iframe
+          src="https://marea.ooo/en/widget?padding=m&components=text%2Cchart&theme=light"
+          loading="lazy"
+          allow="geolocation"
+          title="Marées Dakhla"></iframe>
+      </div>
+      <div class="tide-help">
+        <strong>Première utilisation :</strong> cherche <em>« Dakhla »</em> dans la barre du widget pour afficher les marées du spot. La sélection reste mémorisée par le navigateur.
+        Alternative : <a href="https://www.surf-report.com/horaires-marees/dakhla.html" target="_blank" rel="noopener">surf-report.com</a>.
+      </div>
+    </div>
+  </section>
+
+  <!-- Album photo partagé -->
+  <section class="fade-in" style="margin-top: 3rem;">
+    <div class="widget-label">Album partagé du voyage</div>
+    <a href="REMPLACE_PAR_TON_LIEN_ALBUM" class="album-card" target="_blank" rel="noopener">
+      <div>
+        <div class="album-title">Photos & vidéos<br>du Kitetrip</div>
+        <div class="album-sub">Toutes les sessions, tous les couchers de soleil</div>
+      </div>
+      <span class="album-arrow">↗</span>
+    </a>
+  </section>
+
+  <!-- Convertisseur EUR / MAD -->
+  <section class="widget-section fade-in" style="margin-top: 3rem;">
+    <div class="widget-label">Convertisseur · Euro ↔ Dirham marocain</div>
+    <div class="widget-card converter">
+      <span class="corner-mark tl"></span>
+      <span class="corner-mark tr"></span>
+      <span class="corner-mark bl"></span>
+      <span class="corner-mark br"></span>
+
+      <div class="conv-row">
+        <div class="conv-field">
+          <input type="number" id="eurInput" value="100" min="0" step="1" inputmode="decimal" aria-label="Montant en euros">
+          <span class="conv-label">€ EUR</span>
+        </div>
+        <span class="conv-arrow">↔</span>
+        <div class="conv-field">
+          <input type="number" id="madInput" value="0" min="0" step="1" inputmode="decimal" aria-label="Montant en dirhams">
+          <span class="conv-label">MAD</span>
+        </div>
+      </div>
+      <div class="conv-foot">
+        <span>1 € = <span id="convRate">—</span> MAD</span>
+        <span>Source · open.er-api.com</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tableau matos par rider -->
+  <section class="widget-section fade-in" style="margin-top: 3rem;">
+    <div class="widget-label">Matos par rider</div>
+    <div class="widget-card">
+      <span class="corner-mark tl"></span>
+      <span class="corner-mark tr"></span>
+      <span class="corner-mark bl"></span>
+      <span class="corner-mark br"></span>
+
+      <div class="gear-table-wrap">
+        <table class="gear-table">
+          <thead>
+            <tr>
+              <th>Rider</th>
+              <th>Poids</th>
+              <th>Quiver kites</th>
+              <th>Board(s)</th>
+              <th>Combi / Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rider-name">Guillaume</td>
+              <td class="placeholder">— kg</td>
+              <td class="placeholder">9 / 12 m²</td>
+              <td class="placeholder">TT 138</td>
+              <td class="placeholder">3/2 mm, pompe partagée</td>
+            </tr>
+            <tr><td class="rider-name placeholder">Rider 2</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr><td class="rider-name placeholder">Rider 3</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr><td class="rider-name placeholder">Rider 4</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr><td class="rider-name placeholder">Rider 5</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr><td class="rider-name placeholder">Rider 6</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr><td class="rider-name placeholder">Rider 7</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -958,6 +1242,36 @@
         grid.innerHTML = '<div class="fc-error">Prévisions momentanément indisponibles.</div>';
         console.warn('Forecast error:', err);
       });
+  })();
+</script>
+
+<script>
+  // Convertisseur EUR / MAD via open.er-api.com (gratuit, sans clé)
+  (function() {
+    const eur = document.getElementById('eurInput');
+    const mad = document.getElementById('madInput');
+    const rateEl = document.getElementById('convRate');
+    let rate = null;
+
+    fetch('https://open.er-api.com/v6/latest/EUR')
+      .then(r => r.json())
+      .then(data => {
+        if (!data || !data.rates || !data.rates.MAD) throw new Error('no MAD rate');
+        rate = data.rates.MAD;
+        rateEl.textContent = rate.toFixed(2);
+        mad.value = (parseFloat(eur.value || 0) * rate).toFixed(2);
+      })
+      .catch(err => {
+        rateEl.textContent = 'indispo';
+        console.warn('Conv error:', err);
+      });
+
+    eur.addEventListener('input', () => {
+      if (rate) mad.value = (parseFloat(eur.value || 0) * rate).toFixed(2);
+    });
+    mad.addEventListener('input', () => {
+      if (rate) eur.value = (parseFloat(mad.value || 0) / rate).toFixed(2);
+    });
   })();
 </script>
 
