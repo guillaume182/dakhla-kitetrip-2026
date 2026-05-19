@@ -577,7 +577,7 @@
   /* ===== TIDE GRID (calcul local) ===== */
   .tide-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--sand-deep);
     border: 1px solid var(--sand-deep);
@@ -650,7 +650,10 @@
   .tide-help strong { font-weight: 600; }
   .tide-help a { color: var(--coral); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
+    .tide-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
     .tide-grid { grid-template-columns: 1fr; }
     .tide-day { min-height: auto; }
   }
@@ -1054,7 +1057,7 @@
 
   <!-- Marées -->
   <section class="widget-section fade-in" style="margin-top: 3rem;">
-    <div class="widget-label">Marées · Dakhla · 3 jours</div>
+    <div class="widget-label">Marées · Dakhla · 4 jours</div>
     <div class="widget-card">
       <span class="corner-mark tl"></span>
       <span class="corner-mark tr"></span>
@@ -1409,11 +1412,11 @@
       return h;
     }
 
-    // Trouver les extrêmes sur les 3 prochains jours
+    // Trouver les extrêmes sur les 4 prochains jours
     const now = new Date();
     const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const stepMs = 5 * 60 * 1000; // 5 min
-    const totalMs = 3 * 24 * 3600 * 1000;
+    const totalMs = 4 * 24 * 3600 * 1000;
     const samples = [];
     for (let dt = -stepMs; dt <= totalMs + stepMs; dt += stepMs) {
       const d = new Date(start.getTime() + dt);
@@ -1433,10 +1436,10 @@
 
     const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
     const monthNames = ['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
-    const days = [[], [], []];
+    const days = [[], [], [], []];
     for (const e of extremes) {
       const idx = Math.floor((e.date.getTime() - start.getTime()) / (24 * 3600 * 1000));
-      if (idx >= 0 && idx < 3) days[idx].push(e);
+      if (idx >= 0 && idx < 4) days[idx].push(e);
     }
 
     grid.innerHTML = days.map((events, i) => {
