@@ -246,98 +246,162 @@
   .corner-mark.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
   .corner-mark.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
-  /* ===== LIVE INSERT (top-left flottant) ===== */
-  .live-insert {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    width: 280px;
-    aspect-ratio: 16 / 9;
-    z-index: 100;
-    background: var(--ocean-deep);
-    border: 1px solid var(--ink);
-    box-shadow: 6px 6px 0 var(--coral);
-    overflow: hidden;
+  /* ===== LIVE WIND WIDGET ===== */
+  .livewind {
+    margin-bottom: 3rem;
+    background: white;
+    border: 1px solid var(--sand-deep);
+    padding: 1.5rem 1.75rem;
+    box-shadow: 8px 8px 0 var(--ocean-deep);
+    position: relative;
   }
-  .live-insert video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    background: var(--ocean-deep);
-  }
-  .live-badge {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    background: var(--coral);
-    color: var(--foam);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
-    padding: 0.3rem 0.55rem;
+  .livewind-header {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-weight: 500;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
+    color: var(--ocean);
   }
-  .live-badge .live-dot {
+  .livewind-header .live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--coral);
+    color: var(--foam);
+    padding: 0.3rem 0.55rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+  }
+  .livewind-header .live-tag .live-dot {
     width: 6px;
     height: 6px;
     background: var(--foam);
     border-radius: 50%;
     animation: pulse 1.5s infinite ease-in-out;
   }
-  .live-caption {
-    position: absolute;
-    bottom: 0.5rem;
-    left: 0.5rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--foam);
-    background: rgba(6, 47, 66, 0.78);
-    padding: 0.25rem 0.5rem;
-    pointer-events: none;
+  .livewind-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
   }
-  .live-close {
-    position: absolute;
-    top: 0.4rem;
-    right: 0.4rem;
-    width: 24px;
-    height: 24px;
-    background: rgba(0,0,0,0.55);
-    color: var(--foam);
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    padding: 0;
+  .lw-direction {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .lw-arrow {
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    color: var(--ocean-deep);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .live-close:hover {
+  .lw-arrow svg {
+    width: 100%;
+    height: 100%;
+  }
+  .lw-dirtext {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .lw-dirtext small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--ocean);
+    margin-top: 0.25rem;
+  }
+  .lw-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .lw-chip-value {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    padding: 0.25rem 0.7rem;
+    line-height: 1.1;
+  }
+  .lw-chip.speed .lw-chip-value {
+    background: var(--sun);
+    color: var(--ink);
+  }
+  .lw-chip.gust .lw-chip-value {
     background: var(--coral);
+    color: var(--foam);
+  }
+  .lw-chip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    margin-top: 0.35rem;
+    padding-left: 0.15rem;
+  }
+  .lw-temp {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .lw-temp small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    color: var(--ocean);
+    text-transform: uppercase;
+    margin-top: 0.35rem;
+  }
+  .livewind-footer {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--sand-deep);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #6b5c4a;
+    text-transform: uppercase;
+  }
+  .livewind.loading .lw-direction,
+  .livewind.loading .lw-chip,
+  .livewind.loading .lw-temp {
+    opacity: 0.4;
+  }
+  .lw-error {
+    color: var(--coral);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
   }
 
-  @media (max-width: 720px) {
-    .live-insert {
-      width: 180px;
-      top: 0.5rem;
-      left: 0.5rem;
-      box-shadow: 4px 4px 0 var(--coral);
-    }
-    .live-badge {
-      font-size: 0.55rem;
-      padding: 0.25rem 0.45rem;
-    }
-    .live-caption {
-      display: none;
-    }
+  @media (max-width: 600px) {
+    .livewind { padding: 1.25rem; box-shadow: 4px 4px 0 var(--ocean-deep); }
+    .livewind-row { gap: 1.25rem 1.5rem; }
+    .lw-dirtext, .lw-chip-value, .lw-temp { font-size: 1.2rem; }
+    .lw-arrow { width: 36px; height: 36px; }
   }
 
   /* ===== VIDEOS GRID ===== */
@@ -428,14 +492,6 @@
 </head>
 <body>
 
-<!-- Live insert -->
-<div class="live-insert" id="liveInsert">
-  <video id="liveVideo" autoplay muted playsinline></video>
-  <span class="live-badge"><span class="live-dot"></span>Live</span>
-  <span class="live-caption">Dakhla · cam</span>
-  <button class="live-close" id="liveClose" aria-label="Fermer le live">✕</button>
-</div>
-
 <div class="page">
 
   <!-- Topbar -->
@@ -475,6 +531,53 @@
     <div class="meta-cell">
       <div class="label">Unité</div>
       <div class="value">Knots</div>
+    </div>
+  </section>
+
+  <!-- Live wind (Open-Meteo) -->
+  <section class="livewind fade-in loading" id="livewind">
+    <span class="corner-mark tl"></span>
+    <span class="corner-mark tr"></span>
+    <span class="corner-mark bl"></span>
+    <span class="corner-mark br"></span>
+
+    <div class="livewind-header">
+      <span>Conditions actuelles · Lagune</span>
+      <span class="live-tag"><span class="live-dot"></span>Live</span>
+    </div>
+
+    <div class="livewind-row">
+      <div class="lw-direction">
+        <div class="lw-arrow" id="lwArrow">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4 L28 32 L20 26 L12 32 Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="lw-dirtext">
+          <span id="lwDirCardinal">—</span>
+          <small><span id="lwDirDeg">—</span>°</small>
+        </div>
+      </div>
+
+      <div class="lw-chip speed">
+        <div class="lw-chip-value"><span id="lwSpeed">—</span></div>
+        <div class="lw-chip-label">knots · speed</div>
+      </div>
+
+      <div class="lw-chip gust">
+        <div class="lw-chip-value"><span id="lwGust">—</span></div>
+        <div class="lw-chip-label">knots · gusts</div>
+      </div>
+
+      <div class="lw-temp">
+        <span id="lwTemp">—</span>°C
+        <small>air</small>
+      </div>
+    </div>
+
+    <div class="livewind-footer">
+      <span>Dernière mise à jour : <span id="lwUpdated">—</span></span>
+      <span>Source · Open-Meteo</span>
     </div>
   </section>
 
@@ -556,43 +659,59 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
 <script>
-  // Init du flux live HLS
+  // Widget vent temps réel via Open-Meteo
   (function() {
-    const streamUrl = 'https://flus.spotfav.com/dakhla/index.m3u8?token=371facd5c7967ea91f9799129b458e12c19c51e8-63005742-e0j89apk8od2jhwm-1779267131-1779180431';
-    const video = document.getElementById('liveVideo');
-    const insert = document.getElementById('liveInsert');
+    // Coordonnées approximatives de la lagune de Dakhla (côté Dakhla Attitude / Tour d'Eole)
+    const lat = 23.78;
+    const lon = -15.94;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kn&temperature_unit=celsius&timezone=auto`;
 
-    if (window.Hls && Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(streamUrl);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.ERROR, function (e, data) {
-        if (data.fatal) {
-          insert.style.display = 'none';
-        }
-      });
-      window._dakhlaHls = hls;
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari iOS / macOS supporte HLS nativement
-      video.src = streamUrl;
-    } else {
-      insert.style.display = 'none';
+    const widget = document.getElementById('livewind');
+
+    function degToCardinal(deg) {
+      const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
+      return dirs[Math.round(deg / 22.5) % 16];
     }
 
-    document.getElementById('liveClose').addEventListener('click', function() {
-      insert.style.display = 'none';
-      if (window._dakhlaHls) window._dakhlaHls.destroy();
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
-    });
+    function update() {
+      fetch(url)
+        .then(r => r.json())
+        .then(data => {
+          const c = data.current;
+          if (!c) throw new Error('no data');
 
-    // Clic sur la vidéo pour activer le son
-    video.addEventListener('click', function() {
-      video.muted = !video.muted;
-    });
+          const dir = Math.round(c.wind_direction_10m);
+          const speed = Math.round(c.wind_speed_10m);
+          const gust = Math.round(c.wind_gusts_10m);
+          const temp = Math.round(c.temperature_2m);
+
+          document.getElementById('lwDirCardinal').textContent = degToCardinal(dir);
+          document.getElementById('lwDirDeg').textContent = dir;
+          document.getElementById('lwSpeed').textContent = speed;
+          document.getElementById('lwGust').textContent = gust;
+          document.getElementById('lwTemp').textContent = temp;
+
+          // L'arrow pointe DANS la direction d'où vient le vent (convention météo)
+          // On tourne donc l'arrow pour que sa pointe indique la direction "vers où ça souffle"
+          document.getElementById('lwArrow').style.transform = `rotate(${(dir + 180) % 360}deg)`;
+
+          const date = new Date(c.time);
+          const hh = String(date.getHours()).padStart(2, '0');
+          const mm = String(date.getMinutes()).padStart(2, '0');
+          document.getElementById('lwUpdated').textContent = `${hh}:${mm} heure locale`;
+
+          widget.classList.remove('loading');
+        })
+        .catch(err => {
+          widget.classList.remove('loading');
+          widget.innerHTML = '<div class="lw-error">Données momentanément indisponibles. Réessaye dans quelques minutes.</div>';
+          console.warn('LiveWind error:', err);
+        });
+    }
+
+    update();
+    setInterval(update, 5 * 60 * 1000); // refresh toutes les 5 min
   })();
 </script>
 
