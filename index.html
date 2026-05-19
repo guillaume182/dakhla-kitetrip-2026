@@ -408,8 +408,8 @@
   .windy-frame {
     position: relative;
     width: 100%;
-    aspect-ratio: 4 / 3;
-    background: var(--ocean-deep);
+    height: 380px;
+    background: var(--foam);
   }
   .windy-frame iframe {
     position: absolute;
@@ -420,7 +420,7 @@
     display: block;
   }
   @media (max-width: 600px) {
-    .windy-frame { aspect-ratio: 3 / 4; }
+    .windy-frame { height: 360px; }
   }
 
   /* ===== VIDEOS GRID ===== */
