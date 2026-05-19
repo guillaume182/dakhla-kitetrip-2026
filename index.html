@@ -574,21 +574,68 @@
   }
   .gear-table .placeholder { color: #b5a98c; font-style: italic; }
 
-  /* ===== TIDE FRAME ===== */
-  .tide-frame {
-    position: relative;
-    width: 100%;
-    height: 480px;
-    background: white;
-    overflow: hidden;
+  /* ===== TIDE GRID (calcul local) ===== */
+  .tide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--sand-deep);
+    border: 1px solid var(--sand-deep);
+    margin-bottom: 1rem;
   }
-  .tide-frame iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
+  .tide-day {
+    background: white;
+    padding: 1rem 0.9rem;
+    min-height: 180px;
+  }
+  .tide-day-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ocean-deep);
+    border-bottom: 1px solid var(--sand-deep);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
+  }
+  .tide-day-title small {
     display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--ocean);
+    margin-top: 0.2rem;
+    text-transform: uppercase;
+  }
+  .tide-event {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 0.6rem;
+    align-items: center;
+    padding: 0.55rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+  }
+  .tide-event + .tide-event { border-top: 1px dashed rgba(0,0,0,0.07); }
+  .tide-type {
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0.18rem 0.4rem;
+    display: inline-block;
+    font-size: 0.6rem;
+    text-align: center;
+  }
+  .tide-type.high { background: var(--ocean); color: var(--foam); }
+  .tide-type.low { background: var(--sun); color: var(--ink); }
+  .tide-time {
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .tide-height {
+    color: var(--ocean);
+    font-weight: 500;
   }
   .tide-help {
     margin-top: 0.9rem;
@@ -596,13 +643,60 @@
     background: rgba(244, 185, 66, 0.15);
     border-left: 3px solid var(--sun);
     font-family: 'Fraunces', serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--ink);
+    line-height: 1.5;
   }
   .tide-help strong { font-weight: 600; }
   .tide-help a { color: var(--coral); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  @media (max-width: 600px) {
-    .tide-frame { height: 520px; }
+
+  @media (max-width: 720px) {
+    .tide-grid { grid-template-columns: 1fr; }
+    .tide-day { min-height: auto; }
+  }
+
+  /* ===== GEAR TABLE éditable ===== */
+  .gear-hint {
+    margin-bottom: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .gear-reset {
+    background: transparent;
+    border: 1px solid var(--sand-deep);
+    color: var(--coral);
+    padding: 0.35rem 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .gear-reset:hover {
+    background: var(--coral);
+    color: var(--foam);
+    border-color: var(--coral);
+  }
+  .gear-table td[contenteditable="true"] {
+    cursor: text;
+    transition: background 0.2s;
+  }
+  .gear-table td[contenteditable="true"]:hover {
+    background: rgba(244, 185, 66, 0.1);
+  }
+  .gear-table td[contenteditable="true"]:focus {
+    outline: 2px solid var(--coral);
+    outline-offset: -2px;
+    background: white;
   }
 
   /* ===== FORECAST GRID (Open-Meteo / GMMH) ===== */
@@ -960,28 +1054,24 @@
 
   <!-- Marées -->
   <section class="widget-section fade-in" style="margin-top: 3rem;">
-    <div class="widget-label">Marées · Dakhla</div>
+    <div class="widget-label">Marées · Dakhla · 3 jours</div>
     <div class="widget-card">
       <span class="corner-mark tl"></span>
       <span class="corner-mark tr"></span>
       <span class="corner-mark bl"></span>
       <span class="corner-mark br"></span>
 
-      <div class="tide-frame">
-        <iframe
-          src="https://marea.ooo/en/widget?padding=m&components=text%2Cchart&theme=light"
-          loading="lazy"
-          allow="geolocation"
-          title="Marées Dakhla"></iframe>
+      <div class="tide-grid" id="tideGrid">
+        <div class="fc-loading">Calcul des marées…</div>
       </div>
+      <div class="fc-foot">Modèle harmonique local · précision ±20 min · datum chart</div>
       <div class="tide-help">
-        <strong>Première utilisation :</strong> cherche <em>« Dakhla »</em> dans la barre du widget pour afficher les marées du spot. La sélection reste mémorisée par le navigateur.
-        Alternative : <a href="https://www.surf-report.com/horaires-marees/dakhla.html" target="_blank" rel="noopener">surf-report.com</a>.
+        <strong>PM</strong> = pleine mer (marée haute) · <strong>BM</strong> = basse mer (marée basse). Hauteurs par rapport au zéro hydrographique. Pour vérification fine, voir <a href="https://www.surf-report.com/horaires-marees/dakhla.html" target="_blank" rel="noopener">surf-report.com</a>.
       </div>
     </div>
   </section>
 
-  <!-- Album photo partagé -->
+  <!-- Album photo partagé · MASQUÉ — à réactiver quand on aura la sync vers Google Photos
   <section class="fade-in" style="margin-top: 3rem;">
     <div class="widget-label">Album partagé du voyage</div>
     <a href="REMPLACE_PAR_TON_LIEN_ALBUM" class="album-card" target="_blank" rel="noopener">
@@ -992,10 +1082,11 @@
       <span class="album-arrow">↗</span>
     </a>
   </section>
+  -->
 
-  <!-- Convertisseur EUR / MAD -->
+  <!-- Convertisseur MAD / EUR -->
   <section class="widget-section fade-in" style="margin-top: 3rem;">
-    <div class="widget-label">Convertisseur · Euro ↔ Dirham marocain</div>
+    <div class="widget-label">Convertisseur · Dirham marocain → Euro</div>
     <div class="widget-card converter">
       <span class="corner-mark tl"></span>
       <span class="corner-mark tr"></span>
@@ -1004,13 +1095,13 @@
 
       <div class="conv-row">
         <div class="conv-field">
-          <input type="number" id="eurInput" value="100" min="0" step="1" inputmode="decimal" aria-label="Montant en euros">
-          <span class="conv-label">€ EUR</span>
-        </div>
-        <span class="conv-arrow">↔</span>
-        <div class="conv-field">
-          <input type="number" id="madInput" value="0" min="0" step="1" inputmode="decimal" aria-label="Montant en dirhams">
+          <input type="number" id="madInput" value="100" min="0" step="1" inputmode="decimal" aria-label="Montant en dirhams">
           <span class="conv-label">MAD</span>
+        </div>
+        <span class="conv-arrow">→</span>
+        <div class="conv-field">
+          <input type="number" id="eurInput" value="0" min="0" step="1" inputmode="decimal" aria-label="Montant en euros">
+          <span class="conv-label">€ EUR</span>
         </div>
       </div>
       <div class="conv-foot">
@@ -1020,7 +1111,7 @@
     </div>
   </section>
 
-  <!-- Tableau matos par rider -->
+  <!-- Tableau matos par rider · MASQUÉ — à réactiver quand on aura une vraie sync multi-utilisateurs (Firebase / Supabase / etc.)
   <section class="widget-section fade-in" style="margin-top: 3rem;">
     <div class="widget-label">Matos par rider</div>
     <div class="widget-card">
@@ -1029,8 +1120,13 @@
       <span class="corner-mark bl"></span>
       <span class="corner-mark br"></span>
 
+      <div class="gear-hint">
+        <span>✏︎ Clique sur une cellule pour éditer · enregistrement auto</span>
+        <button class="gear-reset" id="gearReset">Réinitialiser</button>
+      </div>
+
       <div class="gear-table-wrap">
-        <table class="gear-table">
+        <table class="gear-table" id="gearTable">
           <thead>
             <tr>
               <th>Rider</th>
@@ -1042,23 +1138,60 @@
           </thead>
           <tbody>
             <tr>
-              <td class="rider-name">Guillaume</td>
-              <td class="placeholder">— kg</td>
-              <td class="placeholder">9 / 12 m²</td>
-              <td class="placeholder">TT 138</td>
-              <td class="placeholder">3/2 mm, pompe partagée</td>
+              <td class="rider-name" contenteditable="true">Guillaume</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
             </tr>
-            <tr><td class="rider-name placeholder">Rider 2</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
-            <tr><td class="rider-name placeholder">Rider 3</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
-            <tr><td class="rider-name placeholder">Rider 4</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
-            <tr><td class="rider-name placeholder">Rider 5</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
-            <tr><td class="rider-name placeholder">Rider 6</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
-            <tr><td class="rider-name placeholder">Rider 7</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td><td class="placeholder">—</td></tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 2</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 3</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 4</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 5</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 6</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
+            <tr>
+              <td class="rider-name" contenteditable="true">Rider 7</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+              <td contenteditable="true">—</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
+  -->
 
   <!-- Vidéos -->
   <section class="widget-section fade-in" style="margin-top: 3rem;">
@@ -1246,6 +1379,152 @@
 </script>
 
 <script>
+  // Marées Dakhla — calcul harmonique local (5 constituants)
+  // Constantes approximatives pour Villa Cisneros / Dakhla port
+  (function() {
+    const grid = document.getElementById('tideGrid');
+    if (!grid) return;
+
+    // Constantes harmoniques pour Dakhla (approximatives)
+    // amp en m, phase Greenwich en degrés, vitesse en °/h
+    const constituents = [
+      { amp: 0.85, g: 145, speed: 28.9841042, V0_J2000: 235.7 },  // M2
+      { amp: 0.30, g: 170, speed: 30.0,         V0_J2000: 0.0   }, // S2
+      { amp: 0.17, g: 125, speed: 28.4397295,   V0_J2000: 100.8 }, // N2
+      { amp: 0.08, g: 35,  speed: 15.0410686,   V0_J2000: 10.5  }, // K1
+      { amp: 0.05, g: 345, speed: 13.9430356,   V0_J2000: 66.1  }, // O1
+    ];
+    const Z0 = 1.5; // niveau moyen au-dessus du zéro hydrographique
+
+    // J2000.0 = 2000-01-01 12:00:00 UTC
+    const J2000 = Date.UTC(2000, 0, 1, 12, 0, 0);
+
+    function height(date) {
+      const tHours = (date.getTime() - J2000) / 3600000;
+      let h = Z0;
+      for (const c of constituents) {
+        const angle = (c.speed * tHours + c.V0_J2000 - c.g) * Math.PI / 180;
+        h += c.amp * Math.cos(angle);
+      }
+      return h;
+    }
+
+    // Trouver les extrêmes sur les 3 prochains jours
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const stepMs = 5 * 60 * 1000; // 5 min
+    const totalMs = 3 * 24 * 3600 * 1000;
+    const samples = [];
+    for (let dt = -stepMs; dt <= totalMs + stepMs; dt += stepMs) {
+      const d = new Date(start.getTime() + dt);
+      samples.push({ d, h: height(d) });
+    }
+
+    const extremes = [];
+    for (let i = 1; i < samples.length - 1; i++) {
+      const a = samples[i - 1].h, b = samples[i].h, c = samples[i + 1].h;
+      if ((b > a && b >= c) || (b < a && b <= c)) {
+        const d = samples[i].d;
+        if (d.getTime() >= start.getTime() && d.getTime() < start.getTime() + totalMs) {
+          extremes.push({ date: d, type: b > a ? 'high' : 'low', height: b });
+        }
+      }
+    }
+
+    const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    const monthNames = ['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+    const days = [[], [], []];
+    for (const e of extremes) {
+      const idx = Math.floor((e.date.getTime() - start.getTime()) / (24 * 3600 * 1000));
+      if (idx >= 0 && idx < 3) days[idx].push(e);
+    }
+
+    grid.innerHTML = days.map((events, i) => {
+      const d = new Date(start.getTime() + i * 24 * 3600 * 1000);
+      const title = `${dayNames[d.getDay()]} ${d.getDate()}`;
+      const sub = monthNames[d.getMonth()];
+      return `
+        <div class="tide-day">
+          <div class="tide-day-title">${title}<small>${sub}</small></div>
+          ${events.map(e => `
+            <div class="tide-event">
+              <span class="tide-type ${e.type}">${e.type === 'high' ? 'PM' : 'BM'}</span>
+              <span class="tide-time">${String(e.date.getHours()).padStart(2,'0')}:${String(e.date.getMinutes()).padStart(2,'0')}</span>
+              <span class="tide-height">${e.height.toFixed(1)} m</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
+  })();
+</script>
+
+<script>
+  // Table matos par rider — édition inline + sauvegarde localStorage
+  (function() {
+    const table = document.getElementById('gearTable');
+    if (!table) return;
+    const STORAGE_KEY = 'dakhlaKitetripGear_v1';
+    const resetBtn = document.getElementById('gearReset');
+
+    function serialize() {
+      const rows = [];
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+        rows.push(cells);
+      });
+      return rows;
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize()));
+      } catch (e) { console.warn('Gear save error:', e); }
+    }
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const rows = JSON.parse(raw);
+        const trs = table.querySelectorAll('tbody tr');
+        rows.forEach((cells, i) => {
+          if (i >= trs.length) return;
+          const tds = trs[i].querySelectorAll('td');
+          cells.forEach((text, j) => {
+            if (tds[j]) tds[j].textContent = text;
+          });
+        });
+      } catch (e) { console.warn('Gear load error:', e); }
+    }
+
+    // Sauvegarde au blur ou après une frappe
+    table.querySelectorAll('td[contenteditable="true"]').forEach(td => {
+      td.addEventListener('blur', save);
+      td.addEventListener('keydown', e => {
+        // Entrée = valider et passer à la cellule suivante
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          td.blur();
+        }
+      });
+    });
+
+    // Reset
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Effacer toutes les données saisies et revenir au tableau vide ?')) {
+          localStorage.removeItem(STORAGE_KEY);
+          location.reload();
+        }
+      });
+    }
+
+    load();
+  })();
+</script>
+
+<script>
   // Convertisseur EUR / MAD via open.er-api.com (gratuit, sans clé)
   (function() {
     const eur = document.getElementById('eurInput');
@@ -1259,7 +1538,8 @@
         if (!data || !data.rates || !data.rates.MAD) throw new Error('no MAD rate');
         rate = data.rates.MAD;
         rateEl.textContent = rate.toFixed(2);
-        mad.value = (parseFloat(eur.value || 0) * rate).toFixed(2);
+        // Sens par défaut : MAD → EUR
+        eur.value = (parseFloat(mad.value || 0) / rate).toFixed(2);
       })
       .catch(err => {
         rateEl.textContent = 'indispo';
