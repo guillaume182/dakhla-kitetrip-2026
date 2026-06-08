@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a1a2e">
+<title>MonIA Journal</title>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-input: #252540;
+  --accent: #007aff;
+  --success: #34c759;
+  --warning: #ff9500;
+  --danger: #ff3b30;
+  --text: #f0f0f5;
+  --text-secondary: #8e8e9e;
+  --border: rgba(255,255,255,0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  min-height: 100vh; background: var(--bg);
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text); font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.app { max-width: 480px; margin: 0 auto; padding: 0 0 100px; }
+
+/* HEADER */
+.header {
+  background: var(--bg-card);
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.header .sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+/* TABS JOURS */
+.days-scroll {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  overflow-x: auto; white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.days-scroll::-webkit-scrollbar { display: none; }
+.day-tab {
+  display: inline-block; padding: 8px 16px;
+  border-radius: 20px; margin-right: 8px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; border: 2px solid transparent;
+  background: var(--bg-input); color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.day-tab.active { background: var(--accent); color: white; }
+.day-tab.has-data { border-color: var(--success); color: var(--text); }
+.day-tab.active.has-data { border-color: transparent; }
+
+/* SECTION */
+.section { padding: 20px 16px 0; }
+.section-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* CARD */
+.card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+
+/* ENERGIE SLIDER */
+.energie-wrap { display: flex; flex-direction: column; gap: 10px; }
+.energie-label {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.energie-val {
+  font-size: 28px; font-weight: 700; min-width: 40px; text-align: right;
+}
+.energie-emojis {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-secondary);
+  padding: 0 2px;
+}
+input[type="range"] {
+  width: 100%; height: 6px; -webkit-appearance: none;
+  background: var(--bg-input); border-radius: 3px; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--accent);
+  cursor: pointer; box-shadow: 0 2px 8px rgba(0,122,255,0.4);
+}
+
+/* FIELDS */
+.field-label {
+  font-size: 13px; color: var(--text-secondary);
+  font-weight: 600; margin-bottom: 8px; display: block;
+}
+input[type="text"], textarea, input[type="number"] {
+  width: 100%; background: var(--bg-input);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: 16px; padding: 14px;
+  outline: none; font-family: inherit;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+textarea { min-height: 80px; resize: none; line-height: 1.5; }
+
+/* QUICK TAGS */
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.tag {
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 500;
+  background: var(--bg-input); color: var(--text-secondary);
+  cursor: pointer; border: 2px solid transparent;
+  transition: all 0.12s; user-select: none;
+}
+.tag.selected { background: rgba(0,122,255,0.2); color: var(--accent); border-color: var(--accent); }
+
+/* SOMMEIL QUICK */
+.sommeil-quick {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.sommeil-btn {
+  padding: 12px 4px; border-radius: var(--radius-sm);
+  background: var(--bg-input); color: var(--text-secondary);
+  text-align: center; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 2px solid transparent; transition: all 0.12s;
+}
+.sommeil-btn.selected { background: rgba(0,122,255,0.2); color: var(--accent); border-color: var(--accent); }
+.sommeil-btn .icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+/* SAVE BUTTON */
+.save-btn {
+  position: fixed; bottom: 20px; left: 16px; right: 16px;
+  background: var(--accent); color: white;
+  border: none; border-radius: 16px; padding: 18px;
+  font-size: 17px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,122,255,0.4);
+  transition: all 0.15s; font-family: inherit;
+}
+.save-btn:active { transform: scale(0.97); }
+.save-btn.saved { background: var(--success); box-shadow: 0 8px 24px rgba(52,199,89,0.4); }
+
+/* EXPORT SECTION */
+.export-section { padding: 20px 16px; }
+.export-card {
+  background: linear-gradient(135deg, rgba(0,122,255,0.15), rgba(175,82,222,0.15));
+  border: 1px solid rgba(0,122,255,0.3);
+  border-radius: var(--radius); padding: 20px;
+}
+.export-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.export-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; }
+.export-btn {
+  width: 100%; background: var(--accent); color: white;
+  border: none; border-radius: 12px; padding: 16px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  font-family: inherit; margin-bottom: 10px; transition: all 0.15s;
+}
+.export-btn:active { transform: scale(0.98); }
+.export-btn.purple { background: #af52de; }
+.export-status {
+  font-size: 13px; color: var(--text-secondary);
+  text-align: center; min-height: 20px; margin-top: 8px;
+}
+
+/* ENTRIES LIST */
+.entries-list { padding: 0 16px; }
+.entry-item {
+  background: var(--bg-card); border-radius: var(--radius-sm);
+  padding: 14px; margin-bottom: 10px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.entry-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--success); flex-shrink: 0;
+}
+.entry-dot.synced { background: var(--text-secondary); }
+.entry-info { flex: 1; }
+.entry-date { font-weight: 600; font-size: 14px; }
+.entry-preview { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.entry-delete {
+  background: none; border: none; color: var(--danger);
+  font-size: 20px; cursor: pointer; padding: 4px;
+}
+
+/* IMPORT BANNER */
+.import-banner {
+  margin: 16px; background: linear-gradient(135deg, rgba(52,199,89,0.15), rgba(0,122,255,0.15));
+  border: 1px solid rgba(52,199,89,0.4); border-radius: var(--radius);
+  padding: 16px; display: none;
+}
+.import-banner.show { display: block; }
+.import-banner h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--success); }
+.import-banner p { font-size: 13px; color: var(--text-secondary); }
+
+/* NAV BOTTOM */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg-card); border-top: 1px solid var(--border);
+  display: flex; z-index: 20; padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-btn {
+  flex: 1; padding: 12px 4px; text-align: center;
+  cursor: pointer; border: none; background: none; color: var(--text-secondary);
+  font-size: 11px; font-weight: 600; transition: color 0.12s;
+  font-family: inherit;
+}
+.nav-btn .nav-icon { font-size: 22px; display: block; }
+.nav-btn.active { color: var(--accent); }
+
+.page { display: none; }
+.page.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>📔 MonIA Journal</h1>
+    <div class="sub" id="header-sub">Saisie du week-end</div>
+  </div>
+
+  <!-- PAGE SAISIE -->
+  <div id="page-saisie" class="page active">
+
+    <!-- Sélecteur de jours -->
+    <div class="days-scroll" id="days-scroll"></div>
+
+    <!-- Energie -->
+    <div class="section">
+      <div class="section-title">⚡ Énergie & forme</div>
+      <div class="card">
+        <div class="energie-wrap">
+          <div class="energie-label">
+            <label class="field-label" style="margin:0">Niveau d'énergie</label>
+            <span class="energie-val" id="energie-display">5</span>
+          </div>
+          <input type="range" id="energie-slider" min="1" max="10" value="5"
+                 oninput="updateEnergie(this.value)">
+          <div class="energie-emojis">
+            <span>😴 Épuisé</span>
+            <span>😐 Moyen</span>
+            <span>💪 En forme</span>
+            <span>🚀 Top</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sport -->
+    <div class="section">
+      <div class="section-title">🏃 Sport & activité</div>
+      <div class="card">
+        <label class="field-label">Activité principale</label>
+        <div class="tags" id="sport-tags">
+          <div class="tag" onclick="toggleTag(this,'sport')">Repos 😴</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Marche 🚶</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Vélo 🚴</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Kitesurf 🪁</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Natation 🏊</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Muscu 💪</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Course 🏃</div>
+          <div class="tag" onclick="toggleTag(this,'sport')">Yoga 🧘</div>
+        </div>
+        <div style="margin-top:14px;">
+          <label class="field-label">Durée & détails (optionnel)</label>
+          <input type="text" id="sport-detail" placeholder="ex: 2h kite session au vent arrière" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Alimentation -->
+    <div class="section">
+      <div class="section-title">🍽️ Alimentation</div>
+      <div class="card">
+        <label class="field-label">Qualité globale du repas</label>
+        <div class="tags" id="alim-tags">
+          <div class="tag" onclick="toggleTag(this,'alim')">🥗 Sain</div>
+          <div class="tag" onclick="toggleTag(this,'alim')">⚖️ Équilibré</div>
+          <div class="tag" onclick="toggleTag(this,'alim')">🍕 Plaisir</div>
+          <div class="tag" onclick="toggleTag(this,'alim')">🍺 Alcool</div>
+          <div class="tag" onclick="toggleTag(this,'alim')">😬 Excès</div>
+        </div>
+        <div style="margin-top:14px;">
+          <label class="field-label">Détails (repas, calories estimées...)</label>
+          <textarea id="alim-detail" placeholder="ex: midi salade quinoa poulet ~550kcal, soir pizza 1 part"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sommeil -->
+    <div class="section">
+      <div class="section-title">😴 Sommeil</div>
+      <div class="card">
+        <label class="field-label">Durée de la nuit</label>
+        <div class="sommeil-quick" id="sommeil-quick">
+          <div class="sommeil-btn" onclick="selectSommeil(this,'<6h')">
+            <span class="icon">😩</span><6h
+          </div>
+          <div class="sommeil-btn" onclick="selectSommeil(this,'6-7h')">
+            <span class="icon">😐</span>6-7h
+          </div>
+          <div class="sommeil-btn" onclick="selectSommeil(this,'7-8h')">
+            <span class="icon">😊</span>7-8h
+          </div>
+          <div class="sommeil-btn" onclick="selectSommeil(this,'>8h')">
+            <span class="icon">😴</span>>8h
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <label class="field-label">Qualité / notes</label>
+          <input type="text" id="sommeil-detail" placeholder="ex: nuit agitée, réveils, bonne récup..." />
+        </div>
+      </div>
+    </div>
+
+    <!-- Ressenti -->
+    <div class="section">
+      <div class="section-title">💭 Ressenti & humeur</div>
+      <div class="card">
+        <div class="tags" id="humeur-tags" style="margin-bottom:12px;">
+          <div class="tag" onclick="toggleTag(this,'humeur')">😄 Zen</div>
+          <div class="tag" onclick="toggleTag(this,'humeur')">😰 Stressé</div>
+          <div class="tag" onclick="toggleTag(this,'humeur')">😔 Fatigué</div>
+          <div class="tag" onclick="toggleTag(this,'humeur')">💪 Motivé</div>
+          <div class="tag" onclick="toggleTag(this,'humeur')">😤 Tendu</div>
+          <div class="tag" onclick="toggleTag(this,'humeur')">🙂 Neutre</div>
+        </div>
+        <label class="field-label">Notes libres</label>
+        <textarea id="ressenti-detail" placeholder="Douleurs, événement marquant, moral, observations..."></textarea>
+      </div>
+    </div>
+
+    <div style="height:80px;"></div>
+
+    <button class="save-btn" id="save-btn" onclick="saveCurrentEntry()">
+      💾 Sauvegarder cette journée
+    </button>
+
+  </div><!-- /page-saisie -->
+
+  <!-- PAGE EXPORT -->
+  <div id="page-export" class="page">
+
+    <div class="import-banner" id="import-banner">
+      <h3>✅ Données importées !</h3>
+      <p>Ces entrées ont été importées depuis MonIA desktop. Tu peux les modifier si besoin.</p>
+    </div>
+
+    <div class="export-section">
+      <div class="export-card">
+        <h3>📤 Envoyer vers MonIA Desktop</h3>
+        <p>Génère un lien contenant toutes tes entrées. Envoie-le toi par WhatsApp ou email, puis ouvre-le sur ton ordi.</p>
+        <button class="export-btn" onclick="generateShareLink()">
+          🔗 Générer le lien de partage
+        </button>
+        <button class="export-btn purple" onclick="shareViaAndroid()">
+          📱 Partager via Android
+        </button>
+        <div class="export-status" id="export-status"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📋 Entrées enregistrées</div>
+    </div>
+    <div class="entries-list" id="entries-list"></div>
+
+  </div><!-- /page-export -->
+
+</div><!-- /app -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-saisie" onclick="showPage('saisie')">
+    <span class="nav-icon">✏️</span>Saisie
+  </button>
+  <button class="nav-btn" id="nav-export" onclick="showPage('export')">
+    <span class="nav-icon">📤</span>Exporter
+  </button>
+</div>
+
+<script>
+/* ============================================================
+   MonIA Journal Mobile
+   ============================================================ */
+
+let currentDate = getTodayStr();
+let entries = {}; // { 'YYYY-MM-DD': { energie, sport, alim, sommeil, ressenti } }
+let currentEntry = {};
+let selectedSommeil = '';
+
+// --- Init ---
+function init() {
+  entries = JSON.parse(localStorage.getItem('monia_journal_mobile') || '{}');
+  buildDayTabs();
+  loadEntry(currentDate);
+  renderEntriesList();
+  checkImportFromURL();
+  updateHeaderSub();
+}
+
+function getTodayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatDateFR(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' });
+}
+
+function updateHeaderSub() {
+  document.getElementById('header-sub').textContent =
+    formatDateFR(currentDate);
+}
+
+// --- Onglets jours ---
+function buildDayTabs() {
+  const container = document.getElementById('days-scroll');
+  container.innerHTML = '';
+  const days = getLast7Days();
+  days.forEach(d => {
+    const tab = document.createElement('div');
+    tab.className = 'day-tab' + (d === currentDate ? ' active' : '') +
+                    (entries[d] ? ' has-data' : '');
+    tab.textContent = formatDayShort(d);
+    tab.dataset.date = d;
+    tab.onclick = () => switchDay(d);
+    container.appendChild(tab);
+  });
+}
+
+function getLast7Days() {
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  return days;
+}
+
+function formatDayShort(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const today = getTodayStr();
+  if (dateStr === today) return 'Aujourd\'hui';
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+  if (dateStr === yesterday.toISOString().slice(0,10)) return 'Hier';
+  return d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit' });
+}
+
+function switchDay(date) {
+  saveCurrentEntry();
+  currentDate = date;
+  loadEntry(date);
+  buildDayTabs();
+  updateHeaderSub();
+  resetSaveBtn();
+}
+
+// --- Chargement / sauvegarde d'une entrée ---
+function loadEntry(date) {
+  const e = entries[date] || {};
+  currentEntry = { ...e };
+
+  // Énergie
+  const energie = e.energie || 5;
+  document.getElementById('energie-slider').value = energie;
+  updateEnergie(energie);
+
+  // Sport
+  resetTags('sport-tags');
+  if (e.sport_tags) e.sport_tags.forEach(t => selectTagByText('sport-tags', t));
+  document.getElementById('sport-detail').value = e.sport_detail || '';
+
+  // Alim
+  resetTags('alim-tags');
+  if (e.alim_tags) e.alim_tags.forEach(t => selectTagByText('alim-tags', t));
+  document.getElementById('alim-detail').value = e.alim_detail || '';
+
+  // Sommeil
+  selectedSommeil = e.sommeil || '';
+  document.querySelectorAll('.sommeil-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.val === selectedSommeil);
+  });
+  document.getElementById('sommeil-detail').value = e.sommeil_detail || '';
+
+  // Humeur
+  resetTags('humeur-tags');
+  if (e.humeur_tags) e.humeur_tags.forEach(t => selectTagByText('humeur-tags', t));
+  document.getElementById('ressenti-detail').value = e.ressenti_detail || '';
+}
+
+function collectCurrentEntry() {
+  return {
+    date: currentDate,
+    energie: parseInt(document.getElementById('energie-slider').value),
+    sport_tags: getSelectedTags('sport-tags'),
+    sport_detail: document.getElementById('sport-detail').value.trim(),
+    alim_tags: getSelectedTags('alim-tags'),
+    alim_detail: document.getElementById('alim-detail').value.trim(),
+    sommeil: selectedSommeil,
+    sommeil_detail: document.getElementById('sommeil-detail').value.trim(),
+    humeur_tags: getSelectedTags('humeur-tags'),
+    ressenti_detail: document.getElementById('ressenti-detail').value.trim(),
+    saved_at: new Date().toISOString()
+  };
+}
+
+function saveCurrentEntry() {
+  const e = collectCurrentEntry();
+  // Ne sauvegarde que si au moins un champ est rempli
+  const hasData = e.energie !== 5 || e.sport_tags.length || e.sport_detail ||
+                  e.alim_tags.length || e.alim_detail || e.sommeil ||
+                  e.humeur_tags.length || e.ressenti_detail;
+  if (hasData) {
+    entries[currentDate] = e;
+    localStorage.setItem('monia_journal_mobile', JSON.stringify(entries));
+  }
+}
+
+function saveCurrentEntryAndConfirm() {
+  saveCurrentEntry();
+  const btn = document.getElementById('save-btn');
+  btn.textContent = '✅ Journée sauvegardée !';
+  btn.classList.add('saved');
+  buildDayTabs();
+  renderEntriesList();
+  setTimeout(resetSaveBtn, 2000);
+}
+
+function resetSaveBtn() {
+  const btn = document.getElementById('save-btn');
+  btn.textContent = '💾 Sauvegarder cette journée';
+  btn.classList.remove('saved');
+}
+
+// --- Tags helpers ---
+function toggleTag(el, group) {
+  el.classList.toggle('selected');
+}
+function selectTagByText(containerId, text) {
+  document.querySelectorAll(`#${containerId} .tag`).forEach(t => {
+    if (t.textContent.trim() === text) t.classList.add('selected');
+  });
+}
+function getSelectedTags(containerId) {
+  const tags = [];
+  document.querySelectorAll(`#${containerId} .tag.selected`).forEach(t => {
+    tags.push(t.textContent.trim());
+  });
+  return tags;
+}
+function resetTags(containerId) {
+  document.querySelectorAll(`#${containerId} .tag`).forEach(t => t.classList.remove('selected'));
+}
+
+// --- Sommeil ---
+function selectSommeil(el, val) {
+  el.dataset.val = val;
+  selectedSommeil = val;
+  document.querySelectorAll('.sommeil-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+// Init dataset vals
+document.querySelectorAll('.sommeil-btn').forEach((b, i) => {
+  const vals = ['<6h', '6-7h', '7-8h', '>8h'];
+  b.dataset.val = vals[i];
+});
+
+// --- Energie ---
+function updateEnergie(val) {
+  const v = parseInt(val);
+  document.getElementById('energie-display').textContent = v;
+  const colors = {1:'#ff3b30',2:'#ff3b30',3:'#ff9500',4:'#ff9500',5:'#ff9500',
+                  6:'#34c759',7:'#34c759',8:'#34c759',9:'#007aff',10:'#007aff'};
+  document.getElementById('energie-display').style.color = colors[v];
+}
+
+// --- Navigation pages ---
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  if (page === 'export') {
+    saveCurrentEntry();
+    renderEntriesList();
+  }
+}
+
+// --- Export / Partage ---
+function generateShareLink() {
+  const unsyncedEntries = Object.values(entries);
+  if (!unsyncedEntries.length) {
+    setExportStatus('⚠️ Aucune entrée à exporter');
+    return;
+  }
+
+  // Encode les données en base64 dans le hash de l'URL
+  const data = JSON.stringify(unsyncedEntries);
+  const encoded = btoa(unescape(encodeURIComponent(data)));
+
+  // URL de la page desktop pour import
+  // L'utilisateur peut personnaliser cette URL base
+  const baseUrl = window.location.href.split('?')[0].split('#')[0];
+  const shareUrl = baseUrl + '#import=' + encoded;
+
+  // Copie dans le presse-papier
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setExportStatus('✅ Lien copié ! Colle-le dans WhatsApp ou Gmail pour te l\'envoyer.');
+    }).catch(() => {
+      fallbackCopy(shareUrl);
+    });
+  } else {
+    fallbackCopy(shareUrl);
+  }
+}
+
+function shareViaAndroid() {
+  const unsyncedEntries = Object.values(entries);
+  if (!unsyncedEntries.length) {
+    setExportStatus('⚠️ Aucune entrée à exporter');
+    return;
+  }
+  const data = JSON.stringify(unsyncedEntries);
+  const encoded = btoa(unescape(encodeURIComponent(data)));
+  const baseUrl = window.location.href.split('?')[0].split('#')[0];
+  const shareUrl = baseUrl + '#import=' + encoded;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'MonIA Journal — ' + new Date().toLocaleDateString('fr-FR'),
+      text: 'Mon journal santé du week-end',
+      url: shareUrl
+    }).then(() => {
+      setExportStatus('✅ Partagé !');
+    }).catch(() => {
+      setExportStatus('Partage annulé');
+    });
+  } else {
+    generateShareLink(); // fallback
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  setExportStatus('✅ Lien copié ! Colle-le dans WhatsApp ou Gmail.');
+}
+
+function setExportStatus(msg) {
+  document.getElementById('export-status').textContent = msg;
+}
+
+// --- Import depuis URL (sur desktop ou si rouvert sur mobile) ---
+function checkImportFromURL() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#import=')) return;
+  try {
+    const encoded = hash.replace('#import=', '');
+    const data = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    if (Array.isArray(data) && data.length) {
+      // Merge : ne pas écraser les entrées existantes plus récentes
+      data.forEach(e => {
+        if (!entries[e.date] || new Date(e.saved_at) > new Date(entries[e.date]?.saved_at || 0)) {
+          entries[e.date] = e;
+        }
+      });
+      localStorage.setItem('monia_journal_mobile', JSON.stringify(entries));
+      document.getElementById('import-banner').classList.add('show');
+      // Nettoie l'URL
+      history.replaceState(null, '', window.location.pathname);
+      buildDayTabs();
+    }
+  } catch(e) { console.log('URL import error:', e); }
+}
+
+// --- Liste des entrées ---
+function renderEntriesList() {
+  const list = document.getElementById('entries-list');
+  const sorted = Object.values(entries).sort((a,b) => b.date.localeCompare(a.date));
+  if (!sorted.length) {
+    list.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">Aucune entrée. Saisis ta première journée !</div>';
+    return;
+  }
+  list.innerHTML = sorted.map(e => {
+    const tags = [...(e.sport_tags||[]), ...(e.alim_tags||[]), ...(e.humeur_tags||[])];
+    const preview = [
+      e.energie ? `⚡${e.energie}/10` : '',
+      e.sommeil || '',
+      tags.slice(0, 3).join(' '),
+    ].filter(Boolean).join(' · ');
+    return `
+      <div class="entry-item">
+        <div class="entry-dot"></div>
+        <div class="entry-info">
+          <div class="entry-date">${formatDateFR(e.date)}</div>
+          <div class="entry-preview">${preview || '—'}</div>
+        </div>
+        <button class="entry-delete" onclick="deleteEntry('${e.date}')">🗑️</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteEntry(date) {
+  if (!confirm('Supprimer cette entrée ?')) return;
+  delete entries[date];
+  localStorage.setItem('monia_journal_mobile', JSON.stringify(entries));
+  buildDayTabs();
+  renderEntriesList();
+}
+
+// Sauvegarde auto quand l'utilisateur quitte la page
+window.addEventListener('beforeunload', saveCurrentEntry);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') saveCurrentEntry();
+});
+
+// Bouton sauvegarder
+document.getElementById('save-btn').onclick = saveCurrentEntryAndConfirm;
+
+// Lance l'appli
+init();
+</script>
+</body>
+</html>
